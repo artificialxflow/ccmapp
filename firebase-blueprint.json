@@ -1,0 +1,71 @@
+{
+  "entities": {
+    "userProfile": {
+      "title": "User Profile",
+      "description": "Stores user identity, role, and verification status.",
+      "type": "object",
+      "properties": {
+        "phoneNumber": { "type": "string" },
+        "fullName": { "type": "string" },
+        "role": { "type": "string", "enum": ["ADMIN", "CENTER_OWNER", "CENTER_OPERATOR", "VERIFIED_USER", "USER", "GUEST"] },
+        "avatarUrl": { "type": "string" },
+        "isVerified": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["phoneNumber", "role", "isVerified"]
+    },
+    "center": {
+      "title": "Service Center",
+      "description": "Information about a service provider center.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "ownerId": { "type": "string" },
+        "specialty": { "type": "string" },
+        "location": {
+          "type": "object",
+          "properties": {
+            "lat": { "type": "number" },
+            "lng": { "type": "number" },
+            "address": { "type": "string" },
+            "city": { "type": "string" }
+          }
+        },
+        "rating": { "type": "number" },
+        "reviewsCount": { "type": "number" },
+        "isVerified": { "type": "boolean" },
+        "services": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["name", "ownerId", "specialty", "isVerified"]
+    },
+    "appointment": {
+      "title": "Appointment",
+      "description": "Booking record for a service.",
+      "type": "object",
+      "properties": {
+        "centerId": { "type": "string" },
+        "userId": { "type": "string" },
+        "date": { "type": "string" },
+        "time": { "type": "string" },
+        "status": { "type": "string", "enum": ["PENDING", "CONFIRMED", "CANCELLED", "COMPLETED"] },
+        "price": { "type": "number" },
+        "trackingCode": { "type": "string" }
+      },
+      "required": ["centerId", "userId", "date", "time", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "userProfile",
+      "description": "Individual user profiles"
+    },
+    "/centers/{centerId}": {
+      "schema": "center",
+      "description": "Collection of service centers"
+    },
+    "/centers/{centerId}/appointments/{appointmentId}": {
+      "schema": "appointment",
+      "description": "Appointments booked at a specific center"
+    }
+  }
+}
